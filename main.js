@@ -4,7 +4,7 @@ let differentCharIdx;
 let showingAnswer = false;
 
 let fontSize = 42;
-let effectiveSize = fontSize + 6;
+let extraPadding = 6;
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -26,6 +26,7 @@ function generateContent()
 {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
+    const effectiveSize = fontSize + extraPadding;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -53,11 +54,14 @@ function generateContent()
             itemIdx++;
         }
     }
+
+    showingAnswer = false;
 }
 
 function showAnswer() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
+    const effectiveSize = fontSize + extraPadding;
 
     let differentCharRow = Math.floor(differentCharIdx / cols);
     let differentCharCol = differentCharIdx % cols;
@@ -70,19 +74,17 @@ function showAnswer() {
     ctx.beginPath();
     ctx.arc(x, y, effectiveSize, 0, 2*Math.PI);
     ctx.stroke();
+
+    showingAnswer = true;
 }
 
 function doNext() {
     if (showingAnswer) {
-        showingAnswer = false;
         generateContent();
     } else {
-        showingAnswer = true;
         showAnswer();
     }
 }
-
-
 
 function initCanvas() {
     const canvas = document.getElementById("canvas");
@@ -90,11 +92,21 @@ function initCanvas() {
     canvas.height = document.body.clientHeight; //document.height is obsolete
 }
 
+function changeSize(delta) {
+    fontSize += delta;
+    generateContent();
+}
+
 
 document.addEventListener('keydown', (event) => {
     if (event.key == "Enter") {
         doNext();
+    } else if (event.key == "ArrowUp") {
+        changeSize(+4);
+    } else if (event.key == "ArrowDown") {
+        changeSize(-4);
     }
+    console.log(event.key);
 }, false);
 
 initCanvas();
