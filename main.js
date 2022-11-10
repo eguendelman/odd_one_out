@@ -24,6 +24,8 @@ function randomCharacterExceptX(x) {
 
 function generateContent()
 {
+    console.log("Generating content");
+
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const effectiveSize = fontSize + extraPadding;
@@ -59,6 +61,8 @@ function generateContent()
 }
 
 function showAnswer() {
+    console.log("Showing answer");
+
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const effectiveSize = fontSize + extraPadding;
@@ -90,15 +94,15 @@ function initCanvas() {
     const canvas = document.getElementById("canvas");
     canvas.width = document.body.clientWidth; //document.width is obsolete
     canvas.height = document.body.clientHeight; //document.height is obsolete
-canvas.addEventListener('touchstart', doNext);
 
+    // mousedown seems to capture both touch events on mobile and mouse on PC
+    canvas.addEventListener("mousedown", doNext);
 }
 
 function changeSize(delta) {
     fontSize += delta;
     generateContent();
 }
-
 
 document.addEventListener('keydown', (event) => {
     if (event.key == "Enter") {
@@ -112,5 +116,7 @@ document.addEventListener('keydown', (event) => {
 }, false);
 
 initCanvas();
-
 generateContent();
+
+//document.addEventListener("DOMContentLoaded", function () { initCanvas(); generateContent(); doNext(); doNext(); });
+//window.addEventListener('load', (event) => { initCanvas(); generateContent(); });
