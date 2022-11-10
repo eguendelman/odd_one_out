@@ -3,8 +3,11 @@ let numChars;
 let differentCharIdx;
 let showingAnswer = false;
 
-let fontSize = 42;
+let fontSize = 32;
 let extraPadding = 6;
+
+const canvas = document.getElementById("canvas");
+let imageData;
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -26,7 +29,6 @@ function generateContent()
 {
     console.log("Generating content");
 
-    const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const effectiveSize = fontSize + extraPadding;
 
@@ -57,13 +59,14 @@ function generateContent()
         }
     }
 
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
     showingAnswer = false;
 }
 
 function showAnswer() {
     console.log("Showing answer");
 
-    const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const effectiveSize = fontSize + extraPadding;
 
@@ -71,7 +74,10 @@ function showAnswer() {
     let differentCharCol = differentCharIdx % cols;
     let x = differentCharCol * effectiveSize + 0.75*fontSize;
     let y = differentCharRow * effectiveSize + 0.75*fontSize;
-    console.log(`${x}, ${y}`);
+
+    // I shouldn't have to do this, but for some reason on Android Chrome, the first time around the canvas gets
+    // cleared before the circle is drawn...
+    ctx.putImageData(imageData, 0, 0);
 
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 10;
@@ -91,7 +97,6 @@ function doNext() {
 }
 
 function initCanvas() {
-    const canvas = document.getElementById("canvas");
     canvas.width = document.body.clientWidth; //document.width is obsolete
     canvas.height = document.body.clientHeight; //document.height is obsolete
 
